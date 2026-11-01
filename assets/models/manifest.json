@@ -1,0 +1,22 @@
+{
+  "models": [
+    {
+      "id": "tpl-a",
+      "name": "المان نمونه A",
+      "nameEn": "Template A",
+      "file": "element-a.glb"
+    },
+    {
+      "id": "tpl-b",
+      "name": "المان نمونه B",
+      "nameEn": "Template B",
+      "file": "element-b.glb"
+    },
+    {
+      "id": "tpl-c",
+      "name": "المان نمونه C",
+      "nameEn": "Template C",
+      "file": "element-c.glb"
+    }
+  ]
+}

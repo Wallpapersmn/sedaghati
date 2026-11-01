@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="نمونه کار و پورتفولیو صدا صداقتی - طراح گرافیک، ۳ بعدی، لوگو و پوستر" />
+  <title>صداقتی | طراح گرافیک سه‌بعدی</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="theme-cream day-mode" data-lang="fa">
+  <!-- Glass floating Navbar -->
+  <header class="navbar">
+    <div class="nav-pill glass">
+      <a href="#hero" class="logo" aria-label="صداقتی">
+        <span class="logo-mark">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M8 6h10l6 10-6 10H8l6-10L8 6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 6h10l-6 10 6 10H14" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+      <nav class="nav-links">
+        <a href="#profile" data-i18n="nav_profile">پروفایل</a>
+        <a href="#skills" data-i18n="nav_skills">مهارت‌ها</a>
+        <a href="#showcase3d" data-i18n="nav_3d">سه‌بعدی</a>
+        <a href="#resume" data-i18n="nav_resume">رزومه</a>
+        <a href="#contact" data-i18n="nav_contact">تماس</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night" title="روز / شب">
+          <span class="sun" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </span>
+          <span class="moon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </span>
+        </button>
+        <button class="lang-toggle" id="langToggle" aria-label="Change language">
+          <span class="lang-fa">🇮🇷 FA</span>
+          <span class="lang-en">🇬🇧 EN</span>
+        </button>
+        <button class="color-theme-btn" id="colorThemeBtn" aria-label="Color theme" title="تم رنگی">
+          <span class="dot"></span>
+        </button>
+        <a href="#resume" class="btn-resume" data-i18n="btn_resume">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/></svg>
+          <span data-i18n="btn_resume_text">دانلود رزومه</span>
+        </a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero: 3D Text "صداقتی" -->
+  <section id="hero" class="hero">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-content">
+      <p class="hero-sub" data-i18n="hero_sub">طراح گرافیک • سه‌بعدی • هویت بصری</p>
+    </div>
+    <div class="scroll-hint" data-i18n="scroll_hint">اسکرول کنید</div>
+  </section>
+
+  <!-- Profile Section — centered with glowing rings + floating stats -->
+  <section id="profile" class="profile-section">
+    <div class="container profile-centered">
+      <div class="avatar-stage" id="orbitSystem">
+        <!-- glowing rings -->
+        <div class="ring ring-a"></div>
+        <div class="ring ring-b"></div>
+        <div class="ring ring-c"></div>
+        <div class="ring-dot"></div>
+
+        <div class="profile-img-wrap">
+          <img src="assets/profile.jpg" alt="پروفایل صداقتی" class="profile-img" id="profileImg"
+               onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Sadeghati&backgroundColor=e8d5b7'" />
+        </div>
+
+        <!-- floating stat cards -->
+        <div class="stat-card stat-years">
+          <span class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+          <div>
+            <strong data-i18n="stat_years_num">+۸</strong>
+            <span data-i18n="stat_years">سال تجربه</span>
+          </div>
+        </div>
+        <div class="stat-card stat-projects">
+          <span class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20M12 21L8 9l4-6 4 6-4 12z"/></svg>
+          </span>
+          <div>
+            <strong data-i18n="stat_proj_num">+۵۰</strong>
+            <span data-i18n="stat_proj">پروژه</span>
+          </div>
+        </div>
+        <div class="stat-card stat-satis">
+          <span class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 4h2a2 2 0 0 1 2 2v1a4 4 0 0 1-4 4M7 4H5a2 2 0 0 0-2 2v1a4 4 0 0 0 4 4"/></svg>
+          </span>
+          <div>
+            <strong data-i18n="stat_satis_num">۱۰۰٪</strong>
+            <span data-i18n="stat_satis">رضایت</span>
+          </div>
+        </div>
+
+        <!-- portfolio orbit links (icons) -->
+        <a href="pages/3d.html" class="orbit-link ol-3d" title="3D" aria-label="آثار سه‌بعدی">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </a>
+        <a href="pages/2d.html" class="orbit-link ol-2d" title="2D" aria-label="آثار دوبعدی">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </a>
+        <a href="pages/logo.html" class="orbit-link ol-logo" title="Logo" aria-label="طراحی لوگو">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </a>
+        <a href="pages/poster.html" class="orbit-link ol-poster" title="Poster" aria-label="طراحی پوستر">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+        </a>
+      </div>
+
+      <div class="profile-info">
+        <h1 class="profile-name" data-i18n="name">علی صداقتی</h1>
+        <p class="profile-role" data-i18n="role">طراح گرافیک و هنرمند سه‌بعدی</p>
+        <p class="profile-bio" data-i18n="bio">
+          با بیش از ۸ سال تجربه در طراحی هویت بصری، مدل‌سازی سه‌بعدی و خلق فضاهای تعاملی.
+          تخصص من تبدیل ایده‌های شما به تجربه‌های بصری ماندگار است.
+        </p>
+        <div class="profile-actions">
+          <a href="#contact" class="btn btn-primary" data-i18n="btn_contact">تماس با من</a>
+          <a href="#showcase3d" class="btn btn-outline" data-i18n="btn_projects">دیدن پروژه‌ها</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="skills-section">
+    <div class="container">
+      <h2 class="section-title" data-i18n="skills_title">توانایی‌ها</h2>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-icon-el">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M24 4L6 14l18 10 18-10L24 4z"/><path d="M6 24l18 10 18-10"/><path d="M6 34l18 10 18-10"/></svg>
+          </div>
+          <h3 data-i18n="skill_3d">طراح سه‌بعدی</h3>
+          <p data-i18n="skill_3d_desc">مدل‌سازی، رندر و انیمیشن سه‌بعدی برای فضاهای عمومی و محصول</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon-el">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><circle cx="24" cy="16" r="8"/><path d="M10 40c0-8 6-14 14-14s14 6 14 14"/><path d="M32 14l6-4M16 14l-6-4"/></svg>
+          </div>
+          <h3 data-i18n="skill_char">طراح کاراکتر</h3>
+          <p data-i18n="skill_char_desc">طراحی کاراکترهای داستانی و تجاری با هویت بصری قوی</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon-el">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="4" width="32" height="40" rx="2"/><path d="M14 14h20M14 22h20M14 30h12"/></svg>
+          </div>
+          <h3 data-i18n="skill_poster">طراح پوستر</h3>
+          <p data-i18n="skill_poster_desc">پوسترهای تبلیغاتی، فرهنگی و رویداد با ترکیب‌بندی خلاقانه</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon-el">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 36l8-20 8 12 6-8 10 16H8z"/><circle cx="16" cy="14" r="4"/></svg>
+          </div>
+          <h3 data-i18n="skill_graphic">کارهای گرافیکی</h3>
+          <p data-i18n="skill_graphic_desc">هویت بصری، بسته‌بندی، شبکه‌های اجتماعی و طراحی چاپی</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resume -->
+  <section id="resume" class="resume-section">
+    <div class="container">
+      <h2 class="section-title" data-i18n="resume_title">رزومه</h2>
+      <div class="resume-timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="year">۱۴۰۲ – اکنون</span>
+            <h3 data-i18n="job1_title">طراح ارشد سه‌بعدی</h3>
+            <p data-i18n="job1_company">استودیو ویژوال آرت</p>
+            <p data-i18n="job1_desc">طراحی و شبیه‌سازی فضاهای شهری، پارک‌ها و میدان‌ها برای مشتریان سازمانی</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="year">۱۳۹۸ – ۱۴۰۲</span>
+            <h3 data-i18n="job2_title">طراح هویت بصری</h3>
+            <p data-i18n="job2_company">آژانس خلاقیت نور</p>
+            <p data-i18n="job2_desc">طراحی لوگو، سیستم هویت و پوستر برای بیش از ۴۰ برند</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="year">۱۳۹۵ – ۱۳۹۸</span>
+            <h3 data-i18n="job3_title">طراح گرافیک</h3>
+            <p data-i18n="job3_company">فریلنسر</p>
+            <p data-i18n="job3_desc">پروژه‌های متنوع طراحی و تصویرسازی</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3D Showcase - The most important section -->
+  <section id="showcase3d" class="showcase-section">
+    <div class="container">
+      <h2 class="section-title" data-i18n="showcase_title">نمایشگاه سه‌بعدی</h2>
+      <p class="section-desc" data-i18n="showcase_desc">
+        سه فضای عمومی را به صورت تعاملی مشاهده کنید. طرح‌های من در محیط واقعی شبیه‌سازی شده‌اند.
+      </p>
+      <div class="scene-tabs">
+        <button class="scene-tab active" data-scene="park" data-i18n="tab_park">پارک</button>
+        <button class="scene-tab" data-scene="square" data-i18n="tab_square">میدان</button>
+        <button class="scene-tab" data-scene="public" data-i18n="tab_public">مکان عمومی</button>
+      </div>
+      <div class="showcase-workspace">
+        <!-- Model library drawer -->
+        <aside class="model-library" id="modelLibrary">
+          <div class="lib-header">
+            <h3 data-i18n="lib_title">کتابخانه مدل</h3>
+            <label class="upload-btn" for="modelUpload">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              <span data-i18n="lib_upload">آپلود</span>
+            </label>
+            <input type="file" id="modelUpload" accept=".glb,.gltf,model/gltf-binary,model/gltf+json" multiple hidden />
+          </div>
+          <p class="lib-hint" data-i18n="lib_hint">مدل را بکشید و داخل صحنه رها کنید</p>
+          <div class="lib-list" id="modelList">
+            <div class="lib-empty" id="libEmpty" data-i18n="lib_empty">هنوز مدلی نیست — آپلود کنید</div>
+          </div>
+        </aside>
+
+        <div class="scene-viewport" id="sceneViewport">
+          <canvas id="sceneCanvas"></canvas>
+          <div class="drop-overlay" id="dropOverlay" data-i18n="drop_here">اینجا رها کنید</div>
+          <div class="scene-info">
+            <h3 id="sceneTitle" data-i18n="scene_park_title">پارک شهری</h3>
+            <p id="sceneDesc" data-i18n="scene_park_desc">شبیه‌سازی المان‌های نوری، نیمکت و مجسمه‌های پارکی در فضای سبز</p>
+          </div>
+          <div class="scene-controls">
+            <button id="resetCam" data-i18n="reset_cam">بازنشانی دوربین</button>
+            <button id="clearPlaced" data-i18n="clear_models">پاک کردن مدل‌ها</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Quick Links -->
+  <section class="portfolio-links">
+    <div class="container">
+      <h2 class="section-title" data-i18n="portfolio_title">نمونه‌کارها</h2>
+      <div class="portfolio-grid">
+        <a href="pages/logo.html" class="portfolio-card">
+          <div class="card-bg logo-bg"></div>
+          <h3 data-i18n="card_logo">طراحی لوگو</h3>
+        </a>
+        <a href="pages/poster.html" class="portfolio-card">
+          <div class="card-bg poster-bg"></div>
+          <h3 data-i18n="card_poster">طراحی پوستر</h3>
+        </a>
+        <a href="pages/3d.html" class="portfolio-card">
+          <div class="card-bg three-bg"></div>
+          <h3 data-i18n="card_3d">آثار سه‌بعدی</h3>
+        </a>
+        <a href="pages/2d.html" class="portfolio-card">
+          <div class="card-bg two-bg"></div>
+          <h3 data-i18n="card_2d">آثار دوبعدی</h3>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact — minimal centered (Vista-inspired) -->
+  <section id="contact" class="contact-section">
+    <div class="container contact-minimal">
+      <div class="contact-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <path d="M14 10h12l8 14-8 14H14l8-14-8-14z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M22 10h12l-8 14 8 14H22" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <p class="contact-lead" data-i18n="contact_lead">
+        با بیش از ۸ سال تجربه در طراحی گرافیک و سه‌بعدی، تخصص من خلق تجربه‌های بصری زیبا، کاربرپسند و ماندگار است.
+        آماده‌ام ایده‌های شما را به واقعیت تبدیل کنم.
+      </p>
+
+      <div class="social-row">
+        <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V24h-4V8.5zM8.5 8.5h3.8v2.1h.05c.53-1 1.83-2.1 3.77-2.1 4.03 0 4.78 2.65 4.78 6.1V24h-4v-7.5c0-1.8-.03-4.1-2.5-4.1-2.5 0-2.88 1.95-2.88 4V24h-4V8.5z"/></svg>
+        </a>
+        <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.49 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.82.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.64-.07-4.85s.01-3.58.07-4.85C2.38 3.92 3.9 2.38 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 2.7.27.27 2.69.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95C23.73 2.7 21.31.27 16.95.07 15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg>
+        </a>
+        <a href="https://t.me" target="_blank" rel="noopener" aria-label="Telegram" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.94 0C5.34 0 0 5.34 0 11.94s5.34 11.94 11.94 11.94 11.94-5.34 11.94-11.94S18.54 0 11.94 0zm5.55 8.2l-1.85 8.72c-.14.62-.5.77-1.01.48l-2.8-2.06-1.35 1.3c-.15.15-.27.27-.55.27l.2-2.84 5.17-4.67c.22-.2-.05-.31-.35-.12l-6.39 4.02-2.75-.86c-.6-.19-.61-.6.12-.89l10.75-4.14c.5-.18.94.12.78.89z"/></svg>
+        </a>
+        <a href="https://behance.net" target="_blank" rel="noopener" aria-label="Behance" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.5 11.2c.9-.4 1.4-1.1 1.4-2.1 0-2-1.5-2.9-3.9-2.9H0v11.5h6.3c2.5 0 4.3-1.2 4.3-3.5 0-1.5-.8-2.5-2.1-3zm-5.2-3h2c1.1 0 1.7.4 1.7 1.3s-.6 1.4-1.7 1.4h-2V8.2zm2.2 7.1H3.3v-2.9h2.3c1.3 0 2 .5 2 1.5s-.8 1.4-2.1 1.4zM24 9.2h-5.2v-1.3H24V9.2zM20.5 16.8c2.4 0 3.9-1.3 4-3.3h-2.1c-.1.8-.6 1.4-1.8 1.4-1.4 0-2.2-1.1-2.2-2.8 0-1.7.8-2.8 2.2-2.8 1.1 0 1.7.6 1.9 1.5h2.1c-.2-2.1-1.7-3.5-4-3.5-2.7 0-4.4 1.9-4.4 4.8 0 3 1.7 4.7 4.3 4.7z"/></svg>
+        </a>
+        <a href="mailto:info@sadeghati.art" aria-label="Email" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+        </a>
+      </div>
+
+      <nav class="contact-nav">
+        <a href="#profile" data-i18n="nav_profile">پروفایل</a>
+        <a href="#showcase3d" data-i18n="nav_3d">نمایش سه‌بعدی</a>
+        <a href="#skills" data-i18n="nav_skills">مهارت‌ها</a>
+        <a href="#contact" data-i18n="nav_contact">تماس</a>
+      </nav>
+    </div>
+  </section>
+
+  <footer class="footer footer-minimal">
+    <div class="container footer-inner">
+      <p class="footer-copy" data-i18n="footer">© ۱۴۰۳ صداقتی — تمامی حقوق محفوظ است</p>
+      <div class="footer-meta">
+        <span class="avail-badge">
+          <span class="avail-dot"></span>
+          <span data-i18n="available">آماده همکاری جدید</span>
+        </span>
+        <span class="footer-time" id="footerTime"></span>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="بالا">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <!-- Color Theme Panel -->
+  <div class="color-panel" id="colorPanel">
+    <button class="color-option" data-theme="cream" style="--swatch:#f5e6d3"></button>
+    <button class="color-option" data-theme="milky" style="--swatch:#faf8f5"></button>
+    <button class="color-option" data-theme="khaki" style="--swatch:#c4b39a"></button>
+    <button class="color-option" data-theme="earthy" style="--swatch:#a68a6e"></button>
+    <button class="color-option" data-theme="sand" style="--swatch:#e8d5b7"></button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/hero3d.js"></script>
+  <script src="js/orbit.js"></script>
+  <script src="js/showcase3d.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

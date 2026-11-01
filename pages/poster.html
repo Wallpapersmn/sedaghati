@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>طراحی پوستر | صداقتی</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .page-hero { padding: 120px 0 40px; text-align: center; }
+    .page-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 0.5rem; }
+    .page-hero p { color: var(--text-muted); max-width: 520px; margin: 0 auto; }
+    .works-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; padding: 40px 0 80px; }
+    .work-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; }
+    .work-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+    .work-thumb { height: 220px; background: linear-gradient(145deg, #a68a6e, #6b5344); display: grid; place-items: center; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.06em; color: rgba(255,255,255,0.92); text-align: center; padding: 1rem; }
+    .work-body { padding: 1.25rem; }
+    .work-body h3 { font-size: 1.05rem; margin-bottom: 0.35rem; }
+    .work-body p { font-size: 0.88rem; color: var(--text-muted); }
+    .note { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem; }
+  </style>
+</head>
+<body class="theme-cream day-mode" data-lang="fa">
+  <header class="navbar">
+    <div class="nav-pill glass">
+      <a href="../index.html" class="logo" aria-label="صداقتی">
+        <span class="logo-mark">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M8 6h10l6 10-6 10H8l6-10L8 6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 6h10l-6 10 6 10H14" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+      <nav class="nav-links">
+        <a href="../index.html">خانه</a>
+        <a href="../index.html#profile">پروفایل</a>
+        <a href="../index.html#showcase3d">سه‌بعدی</a>
+        <a href="poster.html">طراحی پوستر</a>
+        <a href="../index.html#contact">تماس</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night">
+          <span class="sun"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></span>
+          <span class="moon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        </button>
+        <button class="lang-toggle" id="langToggle"><span class="lang-fa">FA</span><span class="lang-en">EN</span></button>
+        <button class="color-theme-btn" id="colorThemeBtn"><span class="dot"></span></button>
+        <a href="../index.html#resume" class="btn-resume"><span>رزومه</span></a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="color-panel" id="colorPanel">
+    <button class="color-option" data-theme="cream" style="--swatch:#f5e6d3"></button>
+    <button class="color-option" data-theme="milky" style="--swatch:#faf8f5"></button>
+    <button class="color-option" data-theme="khaki" style="--swatch:#c4b39a"></button>
+    <button class="color-option" data-theme="earthy" style="--swatch:#a68a6e"></button>
+    <button class="color-option" data-theme="sand" style="--swatch:#e8d5b7"></button>
+  </div>
+  <main class="container">
+    <div class="page-hero">
+      <h1>طراحی پوستر</h1>
+      <p>نمونه کارهای منتخب در این حوزه</p>
+    </div>
+
+    <div class="works-grid">
+      <article class="work-card"><div class="work-thumb">جشنواره موسیقی</div><div class="work-body"><h3>جشنواره موسیقی معاصر</h3><p>پوستر رویداد با تایپوگرافی برجسته</p></div></article>
+      <article class="work-card"><div class="work-thumb" style="background:linear-gradient(160deg,#c9a87c,#8c6844)">نمایشگاه هنر</div><div class="work-body"><h3>نمایشگاه هنرهای تجسمی</h3><p>ترکیب تصویرسازی و فضای منفی</p></div></article>
+      <article class="work-card"><div class="work-thumb" style="background:linear-gradient(160deg,#7a6b4f,#3d3229)">محیط‌زیست</div><div class="work-body"><h3>کمپین حفاظت از طبیعت</h3><p>پیام قوی با تصاویر مفهومی</p></div></article>
+      <article class="work-card"><div class="work-thumb" style="background:linear-gradient(160deg,#d4b896,#9c7b4f)">تئاتر شهری</div><div class="work-body"><h3>فصل تئاتر شهری</h3><p>سری پوستر با سیستم هویت یکپارچه</p></div></article>
+    </div>
+
+  </main>
+  <footer class="footer footer-minimal"><div class="container footer-inner"><p class="footer-copy">© ۱۴۰۳ صداقتی</p></div></footer>
+  <script src="../js/effects.js"></script>
+  <script src="../js/nav-shared.js"></script>
+</body>
+</html>
