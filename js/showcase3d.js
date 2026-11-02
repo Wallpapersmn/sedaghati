@@ -6,7 +6,7 @@
   let currentScene = "park";
   let rotatingRoots = [];
   let placedModels = []; // user-dropped models
-  let theta = 0.55, phi = 0.72, radius = 24;
+  let theta = 0.85, phi = 1.05, radius = 16;
   let isDraggingCam = false, prevX = 0, prevY = 0;
   let groundPlane = null;
 
@@ -38,7 +38,7 @@
     camera.position.x = radius * Math.sin(phi) * Math.sin(theta);
     camera.position.y = radius * Math.cos(phi);
     camera.position.z = radius * Math.sin(phi) * Math.cos(theta);
-    camera.lookAt(0, 2, 0);
+    camera.lookAt(0, 1.2, 0);
   }
 
   function init() {
@@ -56,27 +56,71 @@
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
 
-    // camera orbit
-    canvas.addEventListener("mousedown", (e) => {
-      if (e.button !== 0) return;
+    // camera orbit — mouse + touch via Pointer Events
+    canvas.style.touchAction = "none";
+    canvas.style.userSelect = "none";
+    canvas.style.webkitUserSelect = "none";
+
+    function onPointerDown(e) {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
       isDraggingCam = true;
-      prevX = e.clientX; prevY = e.clientY;
-    });
-    window.addEventListener("mouseup", () => { isDraggingCam = false; });
-    window.addEventListener("mousemove", (e) => {
+      prevX = e.clientX;
+      prevY = e.clientY;
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+    function onPointerUp(e) {
+      isDraggingCam = false;
+      try { canvas.releasePointerCapture(e.pointerId); } catch (err) {}
+    }
+    function onPointerMove(e) {
       if (!isDraggingCam) return;
-      theta -= (e.clientX - prevX) * 0.005;
-      phi = Math.max(0.2, Math.min(1.35, phi + (e.clientY - prevY) * 0.005));
-      prevX = e.clientX; prevY = e.clientY;
-      updateCam();
-    });
-    canvas.addEventListener("wheel", (e) => {
       e.preventDefault();
-      radius = Math.max(10, Math.min(45, radius + e.deltaY * 0.02));
+      var dx = e.clientX - prevX;
+      var dy = e.clientY - prevY;
+      prevX = e.clientX;
+      prevY = e.clientY;
+      theta -= dx * 0.006;
+      phi = Math.max(0.2, Math.min(1.35, phi + dy * 0.006));
+      updateCam();
+    }
+
+    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointerup", onPointerUp);
+    canvas.addEventListener("pointercancel", onPointerUp);
+    canvas.addEventListener("pointermove", onPointerMove, { passive: false });
+
+    // pinch zoom on touch
+    var lastPinch = 0;
+    canvas.addEventListener("touchstart", function (e) {
+      if (e.touches.length === 2) {
+        var dx = e.touches[0].clientX - e.touches[1].clientX;
+        var dy = e.touches[0].clientY - e.touches[1].clientY;
+        lastPinch = Math.hypot(dx, dy);
+        isDraggingCam = false;
+      }
+    }, { passive: true });
+    canvas.addEventListener("touchmove", function (e) {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        var dx = e.touches[0].clientX - e.touches[1].clientX;
+        var dy = e.touches[0].clientY - e.touches[1].clientY;
+        var dist = Math.hypot(dx, dy);
+        if (lastPinch > 0) {
+          radius = Math.max(8, Math.min(45, radius + (lastPinch - dist) * 0.04));
+          updateCam();
+        }
+        lastPinch = dist;
+      }
+    }, { passive: false });
+    canvas.addEventListener("touchend", function () { lastPinch = 0; }, { passive: true });
+
+    canvas.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      radius = Math.max(8, Math.min(45, radius + e.deltaY * 0.02));
       updateCam();
     }, { passive: false });
 
-    window.resetCam = () => { theta = 0.55; phi = 0.72; radius = 24; updateCam(); };
+    window.resetCam = () => { theta = 0.85; phi = 1.05; radius = 16; updateCam(); };
     document.getElementById("resetCam")?.addEventListener("click", window.resetCam);
     document.getElementById("clearPlaced")?.addEventListener("click", function () { clearPlacedModels(true); });
 
@@ -97,6 +141,8 @@
     loadDefaultModels();
     updateCam();
     buildScene("park");
+    setTimeout(resizeScene, 50);
+    setTimeout(resizeScene, 300);
     animate();
   }
 
@@ -641,38 +687,151 @@
     });
   }
 
+
+  function barkMat() {
+    return new THREE.MeshStandardMaterial({
+      map: T("bark", function () {
+        return makeTex(128, function (u, v) {
+          var n = fbm(u * 6, v * 18, 4);
+          var r = 55 + n * 40;
+          var g = 38 + n * 28;
+          var b = 22 + n * 18;
+          var crack = fbm(u * 30, v * 8, 2) > 0.72 ? 0.75 : 1;
+          return [r * crack, g * crack, b * crack];
+        }, 2);
+      }),
+      roughness: 0.95,
+      metalness: 0
+    });
+  }
+
+  function leafMat(hex) {
+    return new THREE.MeshStandardMaterial({
+      color: hex,
+      roughness: 0.88,
+      metalness: 0,
+      side: THREE.DoubleSide
+    });
+  }
+
+  // Realistic-ish deciduous tree: trunk + branches + leaf clusters
   function addTree(x, z, scale) {
     if (scale === undefined) scale = 1;
-    const g = new THREE.Group();
-    // bark texture trunk
-    const trunkMat = mat(0x3d2a1c, { roughness: 0.95, metalness: 0 });
-    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12 * scale, 0.22 * scale, 2.8 * scale, 8), trunkMat);
-    trunk.position.y = 1.4 * scale;
+    var g = new THREE.Group();
+    var bark = barkMat();
+
+    // main trunk with slight bend using segments
+    var trunkH = 3.2 * scale;
+    var trunk = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.08 * scale, 0.22 * scale, trunkH, 8),
+      bark
+    );
+    trunk.position.y = trunkH / 2;
     trunk.castShadow = true;
     trunk.receiveShadow = true;
     g.add(trunk);
-    // realistic-ish canopy: darker underside, varied greens, flattened spheres
-    const layers = [
-      { y: 2.5, r: 1.15, c: 0x1e3d24, sy: 0.55 },
-      { y: 3.1, r: 1.0, c: 0x2a5230, sy: 0.5 },
-      { y: 3.6, r: 0.8, c: 0x356338, sy: 0.48 },
-      { y: 4.05, r: 0.55, c: 0x3f7340, sy: 0.45 }
-    ];
-    layers.forEach(function (L) {
-      const leaf = new THREE.Mesh(
-        new THREE.SphereGeometry(L.r * scale, 10, 8),
-        mat(L.c, { roughness: 0.9, metalness: 0 })
+
+    // secondary trunks / thick branches
+    var branchCount = 5 + Math.floor(Math.random() * 3);
+    for (var i = 0; i < branchCount; i++) {
+      var a = (i / branchCount) * Math.PI * 2 + Math.random() * 0.4;
+      var elev = 0.9 + Math.random() * 0.5;
+      var len = (1.1 + Math.random() * 0.9) * scale;
+      var thick = (0.04 + Math.random() * 0.04) * scale;
+      var br = new THREE.Mesh(
+        new THREE.CylinderGeometry(thick * 0.45, thick, len, 6),
+        bark
       );
-      leaf.position.y = L.y * scale;
-      leaf.scale.y = L.sy;
+      br.position.set(
+        Math.cos(a) * 0.15 * scale,
+        trunkH * (0.45 + Math.random() * 0.35),
+        Math.sin(a) * 0.15 * scale
+      );
+      br.rotation.z = elev * Math.cos(a);
+      br.rotation.x = elev * Math.sin(a);
+      br.castShadow = true;
+      g.add(br);
+
+      // smaller sub-branch
+      if (Math.random() > 0.35) {
+        var sub = new THREE.Mesh(
+          new THREE.CylinderGeometry(thick * 0.25, thick * 0.45, len * 0.55, 5),
+          bark
+        );
+        sub.position.copy(br.position);
+        sub.position.y += 0.35 * scale;
+        sub.position.x += Math.cos(a + 0.5) * 0.4 * scale;
+        sub.position.z += Math.sin(a + 0.5) * 0.4 * scale;
+        sub.rotation.z = elev * 0.8 * Math.cos(a + 0.5);
+        sub.rotation.x = elev * 0.8 * Math.sin(a + 0.5);
+        sub.castShadow = true;
+        g.add(sub);
+      }
+    }
+
+    // canopy: many overlapping ellipsoids with varied greens (looks fuller / real)
+    var greens = [0x1a3d22, 0x24522c, 0x2d6336, 0x1e4828, 0x356b3c, 0x173820];
+    var canopyY = trunkH * 0.72;
+    var clusters = 14 + Math.floor(Math.random() * 8);
+    for (var j = 0; j < clusters; j++) {
+      var ca = Math.random() * Math.PI * 2;
+      var cr = (0.2 + Math.random() * 1.1) * scale;
+      var cy = canopyY + (Math.random() - 0.3) * 1.8 * scale;
+      var rr = (0.55 + Math.random() * 0.75) * scale;
+      var leaf = new THREE.Mesh(
+        new THREE.SphereGeometry(rr, 8, 6),
+        leafMat(greens[j % greens.length])
+      );
+      leaf.position.set(Math.cos(ca) * cr, cy, Math.sin(ca) * cr);
+      leaf.scale.set(1.15 + Math.random() * 0.3, 0.7 + Math.random() * 0.35, 1.1 + Math.random() * 0.3);
       leaf.castShadow = true;
       leaf.receiveShadow = true;
       g.add(leaf);
-    });
+    }
+
+    // under-canopy darker mass for depth
+    var core = new THREE.Mesh(
+      new THREE.SphereGeometry(1.1 * scale, 8, 6),
+      leafMat(0x14301c)
+    );
+    core.position.y = canopyY + 0.3 * scale;
+    core.scale.set(1.2, 0.85, 1.2);
+    core.castShadow = true;
+    g.add(core);
+
     g.position.set(x, 0, z);
-    // tiny random lean
-    g.rotation.z = (Math.random() - 0.5) * 0.08;
-    g.rotation.x = (Math.random() - 0.5) * 0.06;
+    g.rotation.y = Math.random() * Math.PI * 2;
+    g.rotation.z = (Math.random() - 0.5) * 0.06;
+    scene.add(g);
+    return g;
+  }
+
+  // Tall pine / cypress style for variety
+  function addPine(x, z, scale) {
+    if (scale === undefined) scale = 1;
+    var g = new THREE.Group();
+    var bark = barkMat();
+    var trunk = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.07 * scale, 0.16 * scale, 4.2 * scale, 7),
+      bark
+    );
+    trunk.position.y = 2.1 * scale;
+    trunk.castShadow = true;
+    g.add(trunk);
+    var layers = 6;
+    for (var i = 0; i < layers; i++) {
+      var t = i / (layers - 1);
+      var r = (1.35 - t * 1.05) * scale;
+      var y = (1.3 + i * 0.55) * scale;
+      var cone = new THREE.Mesh(
+        new THREE.ConeGeometry(r, 1.1 * scale, 8),
+        leafMat(i % 2 === 0 ? 0x1c3f28 : 0x254a30)
+      );
+      cone.position.y = y;
+      cone.castShadow = true;
+      g.add(cone);
+    }
+    g.position.set(x, 0, z);
     scene.add(g);
   }
 
@@ -699,69 +858,100 @@
   }
 
   function buildPark() {
-    const night = isNightMode();
+    var night = isNightMode();
     if (night) {
       scene.background = new THREE.Color(0x0a0e16);
       skyDome("#050810", "#0c1422", "#151a14");
       lights(false);
     } else {
       scene.background = new THREE.Color(0x87a0b0);
-      skyDome("#6a8aad", "#b8c8d4", "#d4c8b0");
+      skyDome("#7aa0c0", "#c5d4e0", "#d8cbb0");
       lights(true);
     }
-    ground("grass", 75);
+    ground("grass", 85);
 
-    // dirt path
-    const pathMat = new THREE.MeshStandardMaterial({
+    // winding dirt path
+    var pathMat = new THREE.MeshStandardMaterial({
       map: T("path", function () {
         return makeTex(256, function (u, v) {
-          const n = fbm(u * 14, v * 6, 5);
-          const r = 100 + n * 40, g = 82 + n * 32, b = 55 + n * 22;
-          return [r, g, b];
+          var n = fbm(u * 14, v * 6, 5);
+          return [100 + n * 40, 82 + n * 32, 55 + n * 22];
         }, 3);
       }),
       roughness: 0.95,
-      metalness: 0.0
+      metalness: 0
     });
-    const path = new THREE.Mesh(new THREE.PlaneGeometry(2.8, 42), pathMat);
-    path.rotation.x = -Math.PI / 2; path.position.y = 0.035; path.receiveShadow = true;
+    var path = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 48), pathMat);
+    path.rotation.x = -Math.PI / 2;
+    path.position.y = 0.04;
+    path.receiveShadow = true;
     scene.add(path);
-    [-1.5, 1.5].forEach(function (ox) {
-      const curb = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.1, 42), mat(0x6a645c, { roughness: 0.88 }));
-      curb.position.set(ox, 0.06, 0); curb.receiveShadow = true; scene.add(curb);
+    [-1.4, 1.4].forEach(function (ox) {
+      var curb = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.08, 48), mat(0x6a645c, { roughness: 0.9 }));
+      curb.position.set(ox, 0.05, 0);
+      scene.add(curb);
     });
 
-    for (let i = 0; i < 18; i++) {
-      const a = (i / 18) * Math.PI * 2;
-      const r = 11 + (i % 5) * 2.2 + Math.random();
-      addTree(Math.cos(a) * r, Math.sin(a) * r, 0.9 + Math.random() * 0.5);
+    // dense tree ring — feels like being inside a park
+    for (var i = 0; i < 22; i++) {
+      var a = (i / 22) * Math.PI * 2;
+      var r = 12 + (i % 5) * 2.4 + Math.random() * 1.8;
+      var s = 0.85 + Math.random() * 0.55;
+      if (i % 4 === 0) addPine(Math.cos(a) * r, Math.sin(a) * r, s * 0.95);
+      else addTree(Math.cos(a) * r, Math.sin(a) * r, s);
     }
-    addTree(-7.5, 5.5, 1.2); addTree(8.2, 4.8, 1.05); addTree(-5.5, -8, 1.15);
+    // closer trees for immersion
+    addTree(-6.5, 5.5, 1.25);
+    addTree(7.2, 4.2, 1.1);
+    addTree(-5.0, -7.5, 1.15);
+    addTree(5.5, -6.8, 1.0);
+    addPine(-9.5, 1.5, 1.2);
+    addPine(9.0, -2.0, 1.1);
+    addTree(-2.5, 9.5, 0.95);
+    addTree(3.0, 10.0, 1.05);
 
-    // wood benches
+    // ground litter / rocks
+    for (var k = 0; k < 12; k++) {
+      var aa = Math.random() * Math.PI * 2;
+      var rr = 4 + Math.random() * 14;
+      var rock = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(0.15 + Math.random() * 0.25, 0),
+        mat(0x6a645c, { roughness: 0.95 })
+      );
+      rock.position.set(Math.cos(aa) * rr, 0.08, Math.sin(aa) * rr);
+      rock.rotation.set(Math.random(), Math.random(), Math.random());
+      rock.scale.y = 0.5;
+      rock.castShadow = true;
+      scene.add(rock);
+    }
+
+    // benches
     [-1, 1].forEach(function (side) {
-      const g = new THREE.Group();
-      const wood = mat(0x4a3224, { roughness: 0.85, metalness: 0.02 });
-      const seat = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.08, 0.5), wood);
-      seat.position.y = 0.48; seat.castShadow = true; g.add(seat);
-      const back = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.45, 0.06), wood);
-      back.position.set(0, 0.75, -0.24); g.add(back);
-      const iron = mat(0x1e1e20, { metalness: 0.6, roughness: 0.4 });
+      var bg = new THREE.Group();
+      var wood = mat(0x4a3224, { roughness: 0.85 });
+      var seat = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.08, 0.48), wood);
+      seat.position.y = 0.48; seat.castShadow = true; bg.add(seat);
+      var back = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.42, 0.06), wood);
+      back.position.set(0, 0.72, -0.22); bg.add(back);
+      var iron = mat(0x1e1e20, { metalness: 0.55, roughness: 0.4 });
       [-1, 1].forEach(function (lx) {
-        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.48, 0.4), iron);
-        leg.position.set(lx * 1.0, 0.24, 0); g.add(leg);
+        var leg = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.48, 0.38), iron);
+        leg.position.set(lx * 0.95, 0.24, 0); bg.add(leg);
       });
-      g.position.set(side * 4.8, 0, 3.5); scene.add(g);
+      bg.position.set(side * 4.6, 0, 3.2);
+      scene.add(bg);
     });
 
     addLamp(-7, -6); addLamp(7, -6); addLamp(-7, 9); addLamp(7, 9);
 
-    // concrete pedestal
-    const base = new THREE.Mesh(
+    var base = new THREE.Mesh(
       new THREE.CylinderGeometry(1.5, 1.7, 0.35, 64),
       mat(0x9a948a, { roughness: 0.65, metalness: 0.08 })
     );
-    base.position.y = 0.175; base.castShadow = true; base.receiveShadow = true; scene.add(base);
+    base.position.y = 0.175;
+    base.castShadow = true;
+    base.receiveShadow = true;
+    scene.add(base);
   }
 
   function buildSquare() {
@@ -921,11 +1111,18 @@
 
   function resizeScene() {
     if (!camera || !renderer || !canvas) return;
-    const parent = canvas.parentElement;
-    const w = Math.max(1, (parent && parent.clientWidth) || canvas.clientWidth || 1);
-    const h = Math.max(1, (parent && parent.clientHeight) || canvas.clientHeight || 1);
+    var parent = canvas.parentElement;
+    var w = Math.max(1, (parent && parent.clientWidth) || canvas.clientWidth || window.innerWidth);
+    var h = Math.max(1, (parent && parent.clientHeight) || canvas.clientHeight || 300);
+    // Android sometimes reports 0 before layout
+    if (h < 80 && parent) {
+      parent.style.height = (window.innerWidth < 768 ? Math.min(window.innerHeight * 0.45, 360) : 480) + "px";
+      h = parent.clientHeight || 300;
+    }
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    var dpr = Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1.2 : 2);
+    renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
     canvas.style.width = "100%";
     canvas.style.height = "100%";
