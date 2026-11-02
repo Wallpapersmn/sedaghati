@@ -46,7 +46,7 @@
     camera = new THREE.PerspectiveCamera(48, canvas.clientWidth / canvas.clientHeight, 0.1, 300);
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, (window.innerWidth < 768 ? 1.15 : 2)));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     if (THREE.ACESFilmicToneMapping) {
@@ -919,13 +919,22 @@
     renderer.render(scene, camera);
   }
 
-  new ResizeObserver(() => {
-    if (!camera || !renderer) return;
-    const w = canvas.clientWidth, h = canvas.clientHeight;
+  function resizeScene() {
+    if (!camera || !renderer || !canvas) return;
+    const parent = canvas.parentElement;
+    const w = Math.max(1, (parent && parent.clientWidth) || canvas.clientWidth || 1);
+    const h = Math.max(1, (parent && parent.clientHeight) || canvas.clientHeight || 1);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
-  }).observe(canvas);
+    renderer.setSize(w, h, false);
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+  }
+  if (window.ResizeObserver) {
+    new ResizeObserver(resizeScene).observe(canvas.parentElement || canvas);
+  }
+  window.addEventListener("resize", resizeScene, { passive: true });
+  window.addEventListener("orientationchange", function () { setTimeout(resizeScene, 250); });
 
   ensureGLTFLoader(() => {
     const observer = new IntersectionObserver((entries) => {

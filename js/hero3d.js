@@ -12,7 +12,7 @@
     alpha: true
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, (window.innerWidth < 768 ? 1.25 : 2)));
   renderer.setClearColor(0x000000, 0);
 
   // Lights
@@ -204,9 +204,15 @@
   }
   animate();
 
-  window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
+  function resizeHero() {
+    var w = Math.max(1, window.innerWidth);
+    var h = Math.max(1, window.innerHeight);
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+    renderer.setSize(w, h, false);
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+  }
+  window.addEventListener("resize", resizeHero, { passive: true });
+  window.addEventListener("orientationchange", function () { setTimeout(resizeHero, 200); });
 })();
